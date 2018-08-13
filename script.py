@@ -35,7 +35,7 @@ def main():
     print('start tracking')
     while True:
         mouse_idle = is_mouse_idle()
-        keyboard_idle = is_keyboard_idle()
+        keyboard_idle = is_keyboard_idle(0.01)
 
         current_window = get_window_name()
         idle = mouse_idle and keyboard_idle
@@ -51,15 +51,17 @@ def main():
 
             if duration > 2:
                 save_data([time.time(), last_window, int(duration)])
-                print("{0: 5.0f} s\t".format(duration), "'{}'".format(last_event),
-                      '--> ', current_event)
+                try:
+                    print("{0: 5.0f} s\t".format(duration), "'{}'".format(last_event),
+                          '--> ', current_event)
+                except UnicodeDecodeError:
+                    print("{0: 5.0f} s\t".format(duration), "UNICODE DECODE ERROR")
             last_window = current_window
             start_of_event = time.time()
             last_event = current_event
 
 
 
-        time.sleep(1)
 
 
 def save_data(data):
@@ -99,14 +101,15 @@ def get_window_name():
         print(E)
 
 
-def is_keyboard_idle():
+def is_keyboard_idle(sleep_duration):
     global last_time_key_pressed
     #start = time.time()
     #duration = 1
     idle_time = 10
 
-
+    time.sleep(sleep_duration)
     key_pressed = msvcrt.kbhit()
+
     if key_pressed:
         msvcrt.getch() # reads the keys and resets kbhit()
         last_time_key_pressed = time.time()
@@ -115,13 +118,14 @@ def is_keyboard_idle():
         return True
     return False
 
-def is_keyboard_idle_2():
+
+def is_keyboard_idle_2(sleep_duration):
     global last_time_key_pressed
     start = time.time()
-    duration = 1
+
     idle_time = 10
 
-    while time.time() < (start + duration):
+    while time.time() < (start + sleep_duration):
         key_pressed = msvcrt.kbhit()
         if key_pressed:
             msvcrt.getch() # reads the keys and resets kbhit()
