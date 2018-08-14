@@ -22,14 +22,19 @@ def main():
     u_dur = [] # duratio of unice category
     print('')
     print('')
-    print('{} min total'.format(np.sum(df.duration)%60))
+    total_dur = np.sum(df.duration)
+    total_min = int(np.floor(total_dur / 60))
+    total_sec = total_dur%60
+    print('{0:}:{1:} min total'.format(total_min, total_sec))
     print('')
 
     for u_cat in u_cats:
         temp = df.loc[df.category == u_cat]
         dur = np.sum(temp.duration)
         u_dur.append(dur)
-        print('{1: 6} min  {0:} '.format(u_cat, dur%60))
+        dur_min = int(np.floor(dur/60))
+        dur_sec = dur%60
+        print('{0: 6}:{1:} min  {2:} '.format(dur_min, dur_sec, u_cat))
 
     plt.figure()
     plt.pie(u_dur, labels=u_cats, autopct='%1.1f%%')
