@@ -12,7 +12,8 @@ install win32 gui from:
     Step 3: C:\python32\python.exe Scripts\pywin32_postinstall.py -install
     Step 4: python
 """
-
+import os
+import sys
 import win32gui
 import time
 import pyautogui
@@ -33,6 +34,7 @@ def main():
     global start_of_event
     global last_window
     global last_event
+
     print('start tracking')
     while True:
         mouse_idle = is_mouse_idle()
@@ -53,8 +55,9 @@ def main():
             if duration > 2:
                 save_data([time.time(), last_window, int(duration)])
                 try:
-                    print("{0: 5.0f} s\t".format(duration), "'{}'".format(last_event[:30]),
-                          '--> {}'.format(current_event[:30]))
+                    if sys.version_info.major ==3:
+                        print("{0: 5.0f} s\t".format(duration), "'{}'".format(last_event[:30]),
+                              '--> {}'.format(current_event[:30]))
                 except UnicodeDecodeError:
                     print("{0: 5.0f} s\t".format(duration), "UNICODE DECODE ERROR")
             last_window = current_window
@@ -63,6 +66,8 @@ def main():
 
 
 def save_data(data):
+    if not os.path.isdir('data'):
+        os.mkdir('data')
     with open('data/log.csv', 'a') as file:
         writer = csv.writer(file, delimiter=',', lineterminator="\r")
         writer.writerow(data)
@@ -93,9 +98,9 @@ def get_window_name():
     try:
         parent = win32gui.GetForegroundWindow()
         window_name = win32gui.GetWindowText(parent).lower()
-        window_name = window_name.lower().encode("utf-8", "ignore")
-        window_name = window_name.decode("utf-8", "ignore")
         window_name = window_name.replace(',', '')
+        window_name = window_name.lower().encode("latin_1", "ignore")
+        window_name = window_name.lower().decode("latin_1", "ignore")
         return window_name
     except win32gui.error as E:
         print(E)

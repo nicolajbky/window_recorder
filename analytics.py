@@ -4,7 +4,6 @@ Created on Tue Aug 14 08:36:12 2018
 
 @author: Nicolaj Baramsky
 """
-
 import pandas as pd
 import configparser
 import numpy as np
@@ -16,6 +15,7 @@ string_cats = config.items('CATEGORIES')
 
 
 def main():
+
     df = pd.read_csv('data/log.csv', encoding = "ISO-8859-1", names=['time', 'window', 'duration'])
     df['category'] = df.window.apply(get_cat)
     u_cats = get_unique_categories(string_cats) # unique category name
@@ -25,7 +25,7 @@ def main():
     total_dur = np.sum(df.duration)
     total_min = int(np.floor(total_dur / 60))
     total_sec = total_dur%60
-    print('{0:}:{1:} min total'.format(total_min, total_sec))
+    print('{0:}:{1:02} min total'.format(total_min, total_sec))
     print('')
 
     for u_cat in u_cats:
@@ -34,7 +34,7 @@ def main():
         u_dur.append(dur)
         dur_min = int(np.floor(dur/60))
         dur_sec = dur%60
-        print('{0: 6}:{1:} min  {2:} '.format(dur_min, dur_sec, u_cat))
+        print('{0: 6}:{1:02} min  {2:} '.format(dur_min, dur_sec, u_cat))
 
     plt.figure()
     plt.pie(u_dur, labels=u_cats, autopct='%1.1f%%')

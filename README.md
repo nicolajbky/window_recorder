@@ -40,7 +40,7 @@ mingw64: programming
 ```
 
 ## example results
-run 'analyze.py' to get a summary table and a pie chart of your data.
+run 'analytics.py' to get a summary table and a pie chart of your data.
 
 ```python
 78:5 min total
