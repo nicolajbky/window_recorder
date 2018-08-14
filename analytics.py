@@ -25,8 +25,9 @@ def main():
     total_dur = np.sum(df.duration)
     total_min = int(np.floor(total_dur / 60))
     total_sec = total_dur%60
-    print('{0:}:{1:02} min total'.format(total_min, total_sec))
-    print('')
+    print('-------------------------------------')
+    print('{0: 6}:{1:02} min total'.format(total_min, total_sec))
+    print('-------------------------------------')
 
     for u_cat in u_cats:
         temp = df.loc[df.category == u_cat]
@@ -36,6 +37,12 @@ def main():
         dur_sec = dur%60
         print('{0: 6}:{1:02} min  {2:} '.format(dur_min, dur_sec, u_cat))
 
+    sum_cat_time = total_dur - np.sum(u_dur)
+    sum_dur_min = int(np.floor(sum_cat_time/60))
+    sum_dur_sec = sum_cat_time%60
+    print('-------------------------------------')
+    print('{0: 6}:{1:02} min  not categorized '.format(sum_dur_min, sum_dur_sec))
+
     plt.figure()
     plt.pie(u_dur, labels=u_cats, autopct='%1.1f%%')
     plt.axis('equal')
@@ -44,7 +51,6 @@ def main():
 
 def get_unique_categories(string_cats):
     u_cats = []
-
     for string, cat in string_cats:
         if cat not in u_cats:
             u_cats.append(cat)
@@ -54,9 +60,12 @@ def get_unique_categories(string_cats):
 
 def get_cat(window):
     for string, category in string_cats:
-        if string in window:
-            return category
-            break
+        try:
+            if string in window:
+                return category
+                break
+        except TypeError:
+            pass
     return ''
 
 

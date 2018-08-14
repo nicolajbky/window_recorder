@@ -114,7 +114,8 @@ def is_keyboard_idle(sleep_duration):
     key_pressed = msvcrt.kbhit()
 
     if key_pressed:
-        msvcrt.getch() # reads the keys and resets kbhit()
+        keys = msvcrt.getch() # reads the keys and resets kbhit()
+        print(keys)
         last_time_key_pressed = time.time()
 
     if time.time() > last_time_key_pressed + idle_time:
