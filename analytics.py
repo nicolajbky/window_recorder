@@ -41,7 +41,7 @@ def main():
     sum_dur_min = int(np.floor(sum_cat_time/60))
     sum_dur_sec = sum_cat_time%60
     print('-------------------------------------')
-    print('{0: 6}:{1:02} min  not categorized '.format(sum_dur_min, sum_dur_sec))
+    print('{0: 6}:{1:02} min not categorized, probably wasted '.format(sum_dur_min, sum_dur_sec))
 
     plt.figure()
     plt.pie(u_dur, labels=u_cats, autopct='%1.1f%%')

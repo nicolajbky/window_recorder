@@ -3,8 +3,11 @@ spyder: programming
 stackoverflow: programming
 github: programming
 eingabeaufforderung: programming
-texstudio: latex
+texstudio: documents
+word: documents
+adobe acrobat reader: documents
+thunderbird: mail
 whatsapp: wasted time
-mozilla: wasted time (mozilla)
-chrome: wasted time (chrome)
+mozilla: wasted time
+chrome: wasted time
 mingw64: programming

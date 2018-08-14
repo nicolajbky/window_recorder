@@ -124,4 +124,10 @@ def is_keyboard_idle(sleep_duration):
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except:
+        print (sys.exc_info([0]))
+    finally:
+        print('Press ENTER to continue ...')
+        raw_input()
