@@ -1,7 +1,7 @@
 # Monitor the time you spend
 
 1. run 'script.py' in background
-2. run 'analyze.py' to see where you waisted your time
+2. run 'analytics.py' to see where you waisted your time
 3. have fun
 
 ## requirements
