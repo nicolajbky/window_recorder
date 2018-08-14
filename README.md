@@ -1,10 +1,8 @@
 # Monitor the time you spend
 
-1. create '/data' folder
-2. create 'log.dat' in '/data'
-3. run 'script.py' in background
-4. run 'analyze.py' to see where you waisted your time
-5. have fun
+1. run 'script.py' in background
+2. run 'analyze.py' to see where you waisted your time
+3. have fun
 
 ## requirements
 requires the following packages
