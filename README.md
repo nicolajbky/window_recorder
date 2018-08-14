@@ -33,16 +33,18 @@ from 'categories.dat'
 spyder: programming
 stackoverflow: programming
 github: programming
+eingabeaufforderung: programming
 texstudio: latex
-mozilla: browsing
-chrome: browsing
+whatsapp: wasted time
+mozilla: wasted time (mozilla)
+chrome: wasted time (chrome)
 mingw64: programming
 ```
 
 ## example results
 run 'analytics.py' to get a summary table and a pie chart of your data.
 
-```python
+```
 -------------------------------------
    121:06 min total
 -------------------------------------
