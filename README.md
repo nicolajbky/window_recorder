@@ -41,4 +41,4 @@ mingw64: programming
     15:57 min  browsing
 ```
 
-[pie chart example](/images/example_pie_chart.png)
+![pie chart example](/images/example_pie_chart.png)
