@@ -43,11 +43,16 @@ mingw64: programming
 run 'analytics.py' to get a summary table and a pie chart of your data.
 
 ```python
-78:5 min total
-
-    59:42 min  programming
-     2:11 min  latex
-    15:57 min  browsing
+-------------------------------------
+   121:06 min total
+-------------------------------------
+    88:43 min  programming
+     7:29 min  latex
+     4:38 min  wasted time
+     7:14 min  wasted time (mozilla)
+    11:05 min  wasted time (chrome)
+-------------------------------------
+     1:57 min  not categorized
 ```
 
 ![pie chart example](/images/example_pie_chart.png)
