@@ -1,5 +1,4 @@
 # Monitor the time you spend
-
 1. run 'script.py' in background
 2. run 'analytics.py' to see where you waisted your time
 3. have fun
@@ -19,6 +18,8 @@ Details from [satackoverflow](https://stackoverflow.com/questions/20113456/insta
 1. Download the pywin32....whl from [pythonlibs](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pywin32)
 2. pip install pywin32....whl
 3. C:\python32\python.exe Scripts\pywin32_postinstall.py -install
+
+more details under [Module win32gui](http://timgolden.me.uk/pywin32-docs/win32gui.html)
 
 
 ## categories
@@ -41,18 +42,25 @@ mingw64: programming
 
 ## example results
 run 'analytics.py' to get a summary table and a pie chart of your data.
+Only the data for today will be shown
 
 ```
+Review of 15.8.2018
 -------------------------------------
-   121:06 min total
+     7:50:39 h total
 -------------------------------------
-    88:43 min  programming
-     7:29 min  latex
-     4:38 min  wasted time
-     7:14 min  wasted time (mozilla)
-    11:05 min  wasted time (chrome)
+     4:53:10 h  programming 
+     0:57:42 h  documents 
+     0:14:49 h  mail 
+     1:09:24 h  wasted time 
 -------------------------------------
-     1:57 min  not categorized
+     0:35:34 h not categorized
 ```
 
 ![pie chart example](/images/example_pie_chart.png)
+
+# todo
+- overview over multiple days
+- adding "projects" as a separate measure next to categories
+- overview without running analytics code, preferably a website
+- read the parent process and not only the window title
