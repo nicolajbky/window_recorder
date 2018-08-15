@@ -4,7 +4,7 @@ Created on Tue Aug 14 08:36:12 2018
 
 @author: Nicolaj Baramsky
 """
-import time
+import os
 import datetime
 import pandas as pd
 import configparser
@@ -17,12 +17,18 @@ string_cats = config.items('CATEGORIES')
 
 
 def main():
-
     today = datetime.datetime.now()
     folder = 'data/'
     filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
     path = folder + filename
 
+    if os.path.isfile(path):
+        analyze_today(path)
+    else:
+        print('start script.py first to generate some data.')
+
+def analyze_today(path):
+    today = datetime.datetime.now()
     df = pd.read_csv(path, encoding = "ISO-8859-1", names=['time', 'window', 'duration'])
     df['category'] = df.window.apply(get_cat)
     u_cats = get_unique_categories(string_cats) # unique category name
