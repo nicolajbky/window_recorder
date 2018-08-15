@@ -16,6 +16,7 @@ import os
 import sys
 import win32gui
 import time
+import datetime
 import pyautogui
 import msvcrt
 
@@ -66,9 +67,13 @@ def main():
 
 
 def save_data(data):
-    if not os.path.isdir('data'):
-        os.mkdir('data')
-    with open('data/log.csv', 'a') as file:
+    today = datetime.datetime.now()
+    folder = 'data/'
+    filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
+    path = folder + filename
+    if not os.path.isdir(folder):
+        os.mkdir(folder)
+    with open(path, 'a') as file:
         writer = csv.writer(file, delimiter=',', lineterminator="\r")
         writer.writerow(data)
 
