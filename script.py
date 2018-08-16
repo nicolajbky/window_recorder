@@ -19,6 +19,7 @@ import time
 import datetime
 import pyautogui
 import msvcrt
+import configparser
 import numpy as np
 
 import csv
@@ -30,6 +31,10 @@ start_of_event = time.time()
 last_window = 'start tracking'
 last_event = ''
 idle_time = 5*60
+
+config = configparser.ConfigParser()
+config.read('categories.dat')
+string_cats = config.items('CATEGORIES')
 
 
 def main():
@@ -53,21 +58,32 @@ def main():
 
         if current_event != last_event:
             duration = time.time() - start_of_event
-
             if duration > 2:
-                save_data([time.time(), last_window, int(duration)])
-                try:
-                    if sys.version_info.major ==3:
+                if not is_idle_category(last_window):
+                    save_data([time.time(), last_window, int(duration)])
+                    try:
+                        if sys.version_info.major ==3:
 
-                        mins = int(np.floor(duration/60))
-                        secs = int(np.floor(duration - mins*60))
-                        print("{0: 3}:{1:02} min\t".format(mins, secs), "'{}'".format(last_event[:30]),
-                              '--> {}'.format(current_event[:30]))
-                except UnicodeDecodeError:
-                    print("{0: 5.0f} s\t".format(duration), "UNICODE DECODE ERROR")
+                            mins = int(np.floor(duration/60))
+                            secs = int(np.floor(duration - mins*60))
+                            print("{0: 3}:{1:02} min\t".format(mins, secs), "'{}'".format(last_event[:30]),
+                                  '--> {}'.format(current_event[:30]))
+                    except UnicodeDecodeError:
+                        print("{0: 5.0f} s\t".format(duration), "UNICODE DECODE ERROR")
             last_window = current_window
             start_of_event = time.time()
             last_event = current_event
+
+
+def is_idle_category(window):
+    """
+    returns True if the window title can be categorized as an idle window
+    """
+    for string, cat in string_cats:
+        if string in window:
+            if cat == 'idle':
+                return True
+    return False
 
 
 def save_data(data):
