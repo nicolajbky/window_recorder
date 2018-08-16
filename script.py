@@ -19,6 +19,7 @@ import time
 import datetime
 import pyautogui
 import msvcrt
+import numpy as np
 
 import csv
 
@@ -57,7 +58,10 @@ def main():
                 save_data([time.time(), last_window, int(duration)])
                 try:
                     if sys.version_info.major ==3:
-                        print("{0: 5.0f} s\t".format(duration), "'{}'".format(last_event[:30]),
+
+                        mins = int(np.floor(duration/60))
+                        secs = int(np.floor(duration - mins*60))
+                        print("{0: 3}:{1:02} min\t".format(mins, secs), "'{}'".format(last_event[:30]),
                               '--> {}'.format(current_event[:30]))
                 except UnicodeDecodeError:
                     print("{0: 5.0f} s\t".format(duration), "UNICODE DECODE ERROR")
@@ -132,7 +136,7 @@ if __name__ == '__main__':
     try:
         main()
     except:
-        print (sys.exc_info([0]))
+        print (sys.exc_info())
     finally:
-        print('Press ENTER to continue ...')
-        raw_input()
+        print('Press ENTER to quit ...')
+        input()
