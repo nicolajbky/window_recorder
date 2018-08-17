@@ -10,12 +10,42 @@
 
   <link rel="stylesheet" href="css/styles.css?v=1.0">
 
+<style>
+    table, td, th {
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 800;
+    }
+
+    th, td {
+        padding: 5px;
+        text-align: center;
+    }
+
+    body {
+        font-family: "Verdana";
+    }
+
+    div.gallery {
+        margin: 5px;
+        border: 1px solid #ccc;
+        float: left;
+        width: 250px;
+    }
+
+    div.gallery img {
+        width: 100%;
+        height: auto;
+    }
+</style>
+
 </head>
 
 <body>
 <h1>Track your time - don't waste it!</h1>
 
 
-<table border=1>
-
-  

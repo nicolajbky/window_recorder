@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 def main():
     analytic = Analytics()
     analytic.print_review()
-    analytic.print_pi_chart()
+    #analytic.print_pi_chart()
     analytic.create_html()
     pass
 
@@ -170,14 +170,18 @@ sperrbildschirm: idle"""
 
 
         with open('html/index.html', 'w') as file:
+
+            # TABLE
             file.writelines(head)
-            row = '<tr>\n<td></td>'
+            row = '<table>\n'
+            row += '<tr>\n<td></td>'
             for cat in u_cats:
                 row += '<td><b>{}</b></td>\n'.format(cat)
             row += '</tr>'
 
             for log in log_list:
                 print(log)
+                self.print_pi_chart(log)
                 row += '<tr>\n\t<td>'
                 u_cat, u_dur, date, df = self.analyze(log)
                 date = datetime.datetime.strptime(log[:-4], '%Y-%m-%d')
@@ -192,34 +196,17 @@ sperrbildschirm: idle"""
                     row += '</td>\n'
                 row += '</tr>\n'
             file.write(row)
-            file.write('</table>')
+            file.write('</table>\n')
 
             # images
+            file.write('<div class="gallery">\n')
             img_list = os.listdir('figs')
             for img in img_list:
-                img_row = '<img src="../figs/{}" width=500></br>'.format(img)
+                img_row = '<img src="../figs/{}" width=500></br>\n'.format(img)
                 file.write(img_row)
-
+            file.write('</div>\n')
             file.writelines(tail)
         pass
-
-    """
-    <tr>
- <th scope="date">date</th>
- <th scope="duration">duration</th>
- <th scope="category">category</th>
- <th scope="col">iguana</th>
-</tr>
-<tr>
- <td>5</td>
- <td>2</td>
-
- <td>10</td>
- <td>500</td>
-</tr>
-...
-    """
-
 
 
 if __name__ == '__main__':
