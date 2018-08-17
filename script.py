@@ -21,8 +21,8 @@ import pyautogui
 import msvcrt
 import configparser
 import numpy as np
-
 import csv
+from analytics import Analytics
 
 last_time_key_pressed = time.time()
 last_time_mouse_moved = time.time()
@@ -30,7 +30,7 @@ last_mouse_coords = [0, 0]
 start_of_event = time.time()
 last_window = 'start tracking'
 last_event = ''
-idle_time = 5*60
+idle_time = 10
 
 config = configparser.ConfigParser()
 config.read('categories.dat')
@@ -42,7 +42,15 @@ def main():
     global last_window
     global last_event
 
-    print('start tracking')
+    analytic = Analytics()
+
+    print("""
+---------------------------------------
+TRACK YOUR TIME - DON'T WASTE IT!
+---------------------------------------
+
+  TIME           CATEGORY""")
+
     while True:
         mouse_idle = is_mouse_idle()
         keyboard_idle = is_keyboard_idle(0.01)
@@ -57,19 +65,26 @@ def main():
 
 
         if current_event != last_event:
+            if last_event == 'idle':
+                category = 'idle'
+            else:
+                category = analytic.get_cat(last_window)
+
             duration = time.time() - start_of_event
             if duration > 2:
-                if not is_idle_category(last_window):
-                    save_data([time.time(), last_window, int(duration)])
-                    try:
-                        if sys.version_info.major ==3:
 
-                            mins = int(np.floor(duration/60))
-                            secs = int(np.floor(duration - mins*60))
-                            print("{0: 3}:{1:02} min\t".format(mins, secs), "'{}'".format(last_event[:30]),
-                                  '--> {}'.format(current_event[:30]))
-                    except UnicodeDecodeError:
-                        print("{0: 5.0f} s\t".format(duration), "UNICODE DECODE ERROR")
+
+                save_data([time.time(), category, int(duration)])
+                try:
+                    if sys.version_info.major >2:
+                        mins = int(np.floor(duration/60))
+                        secs = int(np.floor(duration - mins*60))
+                        print("{0: 3}:{1:02} min\t".format(mins, secs),
+                              "{}\t".format(category),
+                              "({})".format(last_event[:30]))
+                except UnicodeDecodeError:
+                    print("{0: 5.0f} s\t".format(duration), "UNICODE DECODE ERROR")
+
             last_window = current_window
             start_of_event = time.time()
             last_event = current_event
@@ -118,7 +133,6 @@ def is_mouse_idle():
     return False
 
 
-
 def get_window_name():
     try:
         parent = win32gui.GetForegroundWindow()
@@ -151,6 +165,8 @@ def is_keyboard_idle(sleep_duration):
 if __name__ == '__main__':
     try:
         main()
+    except KeyboardInterrupt:
+        print('Process interrupted.')
     except:
         print (sys.exc_info())
     finally:
