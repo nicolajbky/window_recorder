@@ -49,18 +49,21 @@ Review of 15.8.2018
 -------------------------------------
      7:50:39 h total
 -------------------------------------
-     4:53:10 h  programming 
-     0:57:42 h  documents 
-     0:14:49 h  mail 
-     1:09:24 h  wasted time 
+     4:53:10 h  programming
+     0:57:42 h  documents
+     0:14:49 h  mail
+     1:09:24 h  wasted time
 -------------------------------------
      0:35:34 h not categorized
 ```
 
 ![pie chart example](/images/example_pie_chart.png)
 
+## Website shows results of all data in "data"
+open html/index.html and see the beauty of your recorded data
+every 60 seconds, the script will automaticall refresh the source code for the html page
+![html preview](/images/html_preview.PNG)
+
 # todo
-- overview over multiple days
 - adding "projects" as a separate measure next to categories
-- overview without running analytics code, preferably a website
 - read the parent process and not only the window title

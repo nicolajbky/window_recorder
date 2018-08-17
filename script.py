@@ -30,7 +30,8 @@ last_mouse_coords = [0, 0]
 start_of_event = time.time()
 last_window = 'start tracking'
 last_event = ''
-idle_time = 10
+idle_time = 5*60
+html_update_time = time.time() + 60
 
 config = configparser.ConfigParser()
 config.read('categories.dat')
@@ -41,6 +42,7 @@ def main():
     global start_of_event
     global last_window
     global last_event
+    global html_update_time
 
     analytic = Analytics()
 
@@ -89,6 +91,9 @@ TRACK YOUR TIME - DON'T WASTE IT!
             start_of_event = time.time()
             last_event = current_event
 
+        if time.time() > html_update_time:
+            analytic.create_html()
+            html_update_time = time.time()+ 60
 
 def is_idle_category(window):
     """
@@ -153,8 +158,7 @@ def is_keyboard_idle(sleep_duration):
     key_pressed = msvcrt.kbhit()
 
     if key_pressed:
-        keys = msvcrt.getch() # reads the keys and resets kbhit()
-        print(keys)
+        #keys = msvcrt.getch() # reads the keys and resets kbhit()
         last_time_key_pressed = time.time()
 
     if time.time() > last_time_key_pressed + idle_time:
