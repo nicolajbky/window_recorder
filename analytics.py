@@ -14,13 +14,16 @@ import matplotlib.pyplot as plt
 
 def main():
     analytic = Analytics()
-    analytic.analyze_today()
+    analytic.analyze()
+    logs, dats = analytic.get_log_list()
+    print(logs, dats)
 
 
 
 class Analytics():
 
     def __init__(self):
+        self.path_data = 'data'
         config = configparser.ConfigParser()
         path_config = 'categories.dat'
         if not os.path.isfile(path_config):
@@ -46,15 +49,17 @@ sperrbildschirm: idle"""
         self.string_cats = config.items('CATEGORIES')
 
 
-    def analyze_today(self):
-        today = datetime.datetime.now()
-        folder = 'data/'
-        filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
-        path = folder + filename
-        if not os.path.isfile(path):
-            print('start script.py first to generate some data.')
-            return
+    def analyze(self, logfile=''):
+        if logfile == '':
+            today = datetime.datetime.now()
+            filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
+            path = self.path_data + '/' + filename
+            print('open {}'.format(path))
+            if not os.path.isfile(path):
+                print('start script.py first to generate some data.')
+                return
 
+        day = datetime.datetime.strptime(filename[:-4], '%Y-%m-%d')
 
         df = pd.read_csv(path, encoding = "ISO-8859-1", names=['time', 'category', 'duration'])
         u_cats = self.get_unique_categories(self.string_cats) # unique category name
@@ -65,7 +70,7 @@ sperrbildschirm: idle"""
         total_hr = int(np.floor(total_dur / 3600))
         total_min = int(np.floor((total_dur-total_hr*3600) / 60))
         total_sec = total_dur%60
-        print('Review of {}.{}.{}'.format(today.day, today.month, today.year))
+        print('Review of {0:02}.{1:02}.{2:04}'.format(today.day, today.month, today.year))
         print('-------------------------------------')
         print('{0: 6}:{1:02}:{2:02} h total'.format(total_hr, total_min, total_sec))
         print('-------------------------------------')
@@ -90,6 +95,21 @@ sperrbildschirm: idle"""
         plt.pie(u_dur, labels=u_cats, autopct='%1.1f%%')
         plt.axis('equal')
         plt.show()
+
+        return u_cats, u_dur
+
+    def print_review(self, u_cats, u_dur):
+        pass
+
+
+    def get_log_list(self):
+        log_list = os.listdir(self.path_data)
+        date_list = []
+        for log in log_list:
+
+            date_list.append(datetime.datetime.strptime(log[:-4], '%Y-%m-%d'))
+        return log_list, date_list
+
 
 
     def get_unique_categories(self, string_cats):
