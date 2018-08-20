@@ -34,8 +34,13 @@ idle_time = 5*60
 html_update_time = time.time() + 60
 
 config = configparser.ConfigParser()
-config.read('categories.dat')
-string_cats = config.items('CATEGORIES')
+try:
+    print(config.read('categories.dat'))
+    string_cats = config.items('CATEGORIES')
+except Exception as e:
+    print(e)
+    print('Press ENTER to quit ...')
+    input()
 
 
 def main():
@@ -171,8 +176,8 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         print('Process interrupted.')
-    except:
-        print (sys.exc_info())
+    except Exception as e:
+        print (e)
     finally:
         print('Press ENTER to quit ...')
         input()

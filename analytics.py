@@ -55,12 +55,12 @@ sperrbildschirm: idle"""
             today = datetime.datetime.now()
             filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
             path = self.path_data + '/' + filename
-            if not os.path.isfile(path):
-                print('start script.py first to generate some data.')
-                return
+
         else:
             filename = logfile
         path = self.path_data + '/' + filename
+        if not os.path.isfile(path):
+                raise FileNotFoundError ('Logfile not found. Start script.py first do generate data')
         date = datetime.datetime.strptime(filename[:-4], '%Y-%m-%d')
 
         df = pd.read_csv(path, encoding = "ISO-8859-1", names=['time', 'category', 'duration'])
