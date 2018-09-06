@@ -8,6 +8,7 @@ python.exe: programming
 python.org: programming
 python35: programming
 texstudio: documents
+xls : documents
 word: documents
 adobe acrobat reader: documents
 thunderbird: mail

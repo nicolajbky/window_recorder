@@ -95,7 +95,7 @@ sperrbildschirm: idle"""
         plt.axis('equal')
         path = 'figs/'+filename
         plt.savefig(path)
-        plt.show()
+        #plt.show()
         plt.close()
         print('Figure saved as {}'.format(path))
 
@@ -168,7 +168,6 @@ sperrbildschirm: idle"""
         with open('html/tail.txt', 'r') as file:
             tail = file.read()
 
-
         with open('html/index.html', 'w') as file:
 
             # TABLE
@@ -179,9 +178,8 @@ sperrbildschirm: idle"""
                 row += '<td><b>{}</b></td>\n'.format(cat)
             row += '</tr>'
 
+            self.print_pi_chart()
             for log in log_list:
-                print(log)
-                self.print_pi_chart(log)
                 row += '<tr>\n\t<td>'
                 u_cat, u_dur, date, df = self.analyze(log)
                 date = datetime.datetime.strptime(log[:-4], '%Y-%m-%d')
@@ -206,7 +204,7 @@ sperrbildschirm: idle"""
                 file.write(img_row)
             file.write('</div>\n')
             file.writelines(tail)
-        pass
+        print('html updated')
 
 
 if __name__ == '__main__':
