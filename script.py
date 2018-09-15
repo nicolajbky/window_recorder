@@ -35,7 +35,7 @@ html_update_time = time.time() + 60
 
 config = configparser.ConfigParser()
 try:
-    print(config.read('categories.dat'))
+    print(config.read('config.dat'))
     string_cats = config.items('CATEGORIES')
 except Exception as e:
     print(e)

@@ -10,14 +10,18 @@ import pandas as pd
 import configparser
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 
 def main():
+    logfile = ''#2018-8-18.csv'
     analytic = Analytics()
-    analytic.print_review()
-    #analytic.print_pi_chart()
-    analytic.create_html()
-    pass
+    analytic.print_review(logfile)
+    analytic.print_timeline(logfile) #
+    analytic.print_pi_chart(logfile)
+    analytic.create_html(logfile)
+
+
 
 
 class Analytics():
@@ -25,7 +29,7 @@ class Analytics():
     def __init__(self):
         self.path_data = 'data'
         config = configparser.ConfigParser()
-        path_config = 'categories.dat'
+        path_config = 'config.dat'
         if not os.path.isfile(path_config):
             with open(path_config, 'w') as file:
                 config_template="""[CATEGORIES]
@@ -42,12 +46,75 @@ whatsapp: wasted time
 mozilla: wasted time
 chrome: wasted time
 mingw64: programming
-sperrbildschirm: idle"""
+sperrbildschirm: idle
+
+[COLORS]
+programming: #4954EA
+documents: #F68D15
+mail: #72ACF1
+wasted time: #F64438
+idle: #837F7F"""
                 file.write(config_template)
         if not os.path.isdir('figs'):
             os.mkdir('figs')
-        config.read('categories.dat')
+        config.read('config.dat')
         self.string_cats = config.items('CATEGORIES')
+        self.color_list = config.items('COLORS')
+
+
+    def print_timeline(self, logfile=''):
+        if logfile == '':
+            today = datetime.datetime.now()
+            filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
+            path = self.path_data + '/' + filename
+
+        else:
+            filename = logfile
+            today = datetime.datetime.strptime(logfile[:-4], '%Y-%m-%d')
+        path = self.path_data + '/' + filename
+        if not os.path.isfile(path):
+                raise FileNotFoundError ('Logfile not found. Start script.py first do generate data')
+
+        df = pd.read_csv(path, encoding = "ISO-8859-1", names=['time', 'category', 'duration'])
+        u_cats = self.get_unique_categories(self.string_cats) # unique category name
+
+        colors = self.get_colors(logfile)
+        plt.title('')
+        for idx, u_cat in enumerate(u_cats):
+            temp = df.loc[df.category == u_cat]
+            time = temp.time.values
+            duration = temp.duration.values
+
+            for entry in range(len(time)):
+                start_time = datetime.datetime.fromtimestamp(time[0]).date()
+                start = datetime.datetime.fromtimestamp(time[entry] - duration[entry])
+                end = datetime.datetime.fromtimestamp(time[entry])
+                #print(u_cat, start, end, '\t', duration[entry])
+                plt.plot([start , end], [idx, idx] , '-.', linewidth=7, color=colors[idx])
+        plt.yticks(range(len(u_cat)+1), u_cats)
+        plt.grid()
+        plt.title(start_time)
+        time_delta = datetime.time(23, 59, 59, 999999)
+        end_time = datetime.datetime.combine(start_time, time_delta)
+
+        plt.xlim([start_time, end_time])
+        plt.gcf().autofmt_xdate()
+        myFmt = mdates.DateFormatter('%H:%M')
+        plt.gca().xaxis.set_major_formatter(myFmt)
+        plt.tight_layout()
+
+
+        fig_path = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.png'
+
+        path = 'figs/timeline/' + fig_path
+        plt.savefig(path)
+
+        plt.close()
+        print('Timeline saved as {}'.format(path))
+
+
+
+
 
 
     def analyze(self, logfile=''):
@@ -74,11 +141,10 @@ sperrbildschirm: idle"""
 
 
     def print_pi_chart(self, logfile=''):
-
         if logfile == '':
             date = datetime.datetime.today()
         else:
-            date = date = datetime.datetime.strptime(logfile[:-4], '%Y-%m-%d')
+            date = datetime.datetime.strptime(logfile[:-4], '%Y-%m-%d')
 
         filename = str(date.year) + '-' + str(date.month) + '-' + str(date.day) + '.png'
         u_cats, u_dur, date, df = self.analyze(logfile)
@@ -91,13 +157,25 @@ sperrbildschirm: idle"""
         plt.title('{0:02}.{1:02}.{2:04} - {3:02}:{4:02}:{5:02} h'\
                   .format(date.day, date.month, date.year,
                           total_hr, total_min, total_sec))
-        plt.pie(u_dur, labels=u_cats, autopct='%1.1f%%')
+        plt.pie(u_dur, labels=u_cats, autopct='%1.1f%%', colors = self.get_colors(logfile))
         plt.axis('equal')
-        path = 'figs/'+filename
+        plt.tight_layout()
+        path = 'figs/pie/'+filename
         plt.savefig(path)
         #plt.show()
         plt.close()
-        print('Figure saved as {}'.format(path))
+        print('Pie chart saved as {}'.format(path))
+
+
+    def get_colors(self, logfile):
+        colors = []
+        u_cats, _, _, _ = self.analyze(logfile)
+        for u_cat in u_cats:
+            for col_cat, col in self.color_list:
+                if u_cat == col_cat:
+                    colors.append(col)
+        return colors
+
 
 
     def print_review(self, logfile=''):
@@ -179,6 +257,7 @@ sperrbildschirm: idle"""
             row += '</tr>'
 
             self.print_pi_chart()
+            self.print_timeline()
             for log in log_list:
                 row += '<tr>\n\t<td>'
                 u_cat, u_dur, date, df = self.analyze(log)
@@ -198,9 +277,9 @@ sperrbildschirm: idle"""
 
             # images
             file.write('<div class="gallery">\n')
-            img_list = os.listdir('figs')
+            img_list = os.listdir('figs/pie')
             for img in img_list:
-                img_row = '<img src="../figs/{}" width=500></br>\n'.format(img)
+                img_row = '<img src="../figs/pie/{}" width=500></br>\n'.format(img)
                 file.write(img_row)
             file.write('</div>\n')
             file.writelines(tail)

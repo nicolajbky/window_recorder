@@ -4,8 +4,7 @@ stackoverflow: programming
 stackexchange: programming
 github: programming
 eingabeaufforderung: programming
-python.exe: programming
-python.org: programming
+python: programming
 python35: programming
 texstudio: documents
 xls : documents
@@ -17,3 +16,10 @@ mozilla: wasted time
 chrome: wasted time
 mingw64: programming
 sperrbildschirm: idle
+
+[COLORS]
+programming: #4954EA
+documents: #F68D15
+mail: #72ACF1
+wasted time: #F64438
+idle: #837F7F
