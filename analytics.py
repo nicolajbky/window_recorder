@@ -14,14 +14,19 @@ import matplotlib.dates as mdates
 
 
 def main():
-    logfile = ''#2018-8-18.csv'
-    analytic = Analytics()
-    analytic.print_review(logfile)
-    analytic.print_timeline(logfile) #
-    analytic.print_pi_chart(logfile)
-    analytic.create_html(logfile)
+    reanalyze_all()
 
 
+def reanalyze_all():
+    logfiles = os.listdir('data')
+    for logfile in logfiles:
+        print('logfile', logfile)
+        #logfile = '' #'2018-9-5.csv'
+        analytic = Analytics()
+        analytic.print_review(logfile)
+        analytic.print_timeline(logfile)
+        analytic.print_pi_chart(logfile)
+        analytic.create_html(logfile)
 
 
 class Analytics():
@@ -65,7 +70,7 @@ idle: #837F7F"""
     def print_timeline(self, logfile=''):
         if logfile == '':
             today = datetime.datetime.now()
-            filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
+            filename = '{0:d}-{1:02d}-{2:02d}.csv'.format(today.year, today.month, today.day)
             path = self.path_data + '/' + filename
 
         else:
@@ -86,15 +91,16 @@ idle: #837F7F"""
             duration = temp.duration.values
 
             for entry in range(len(time)):
-                start_time = datetime.datetime.fromtimestamp(time[0]).date()
-                start = datetime.datetime.fromtimestamp(time[entry] - duration[entry])
-                end = datetime.datetime.fromtimestamp(time[entry])
+                start_time = datetime.datetime.fromtimestamp(float(time[0])).date()
+                start = datetime.datetime.fromtimestamp(float(time[entry]) - float(duration[entry]))
+                end = datetime.datetime.fromtimestamp(float(time[entry]))
                 #print(u_cat, start, end, '\t', duration[entry])
                 plt.plot([start , end], [idx, idx] , '-.', linewidth=7, color=colors[idx])
         plt.yticks(range(len(u_cat)+1), u_cats)
         plt.grid()
         plt.title(start_time)
-        time_delta = datetime.time(23, 59, 59, 999999)
+        start_time = datetime.datetime.combine(start_time, datetime.time(7,00))
+        time_delta = datetime.time(20)
         end_time = datetime.datetime.combine(start_time, time_delta)
 
         plt.xlim([start_time, end_time])
@@ -103,10 +109,10 @@ idle: #837F7F"""
         plt.gca().xaxis.set_major_formatter(myFmt)
         plt.tight_layout()
 
+        filename = '{0:d}-{1:02d}-{2:02d}.png'.format(today.year, today.month, today.day)
+        #fig_path = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.png'
 
-        fig_path = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.png'
-
-        path = 'figs/timeline/' + fig_path
+        path = 'figs/timeline/' + filename
         plt.savefig(path)
 
         plt.close()
@@ -120,7 +126,7 @@ idle: #837F7F"""
     def analyze(self, logfile=''):
         if logfile == '':
             today = datetime.datetime.now()
-            filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
+            filename = '{0:d}-{1:02d}-{2:02d}.csv'.format(today.year, today.month, today.day)
             path = self.path_data + '/' + filename
 
         else:
@@ -142,11 +148,11 @@ idle: #837F7F"""
 
     def print_pi_chart(self, logfile=''):
         if logfile == '':
-            date = datetime.datetime.today()
+            today = datetime.datetime.today()
         else:
-            date = datetime.datetime.strptime(logfile[:-4], '%Y-%m-%d')
+            today = datetime.datetime.strptime(logfile[:-4], '%Y-%m-%d')
 
-        filename = str(date.year) + '-' + str(date.month) + '-' + str(date.day) + '.png'
+        filename = '{0:d}-{1:02d}-{2:02d}.png'.format(today.year, today.month, today.day)
         u_cats, u_dur, date, df = self.analyze(logfile)
         total_dur = np.sum(u_dur)
         total_hr = int(np.floor(total_dur / 3600))
@@ -155,7 +161,7 @@ idle: #837F7F"""
 
         plt.figure(num=None, figsize=(8, 6), dpi=80, facecolor='w', edgecolor='k')
         plt.title('{0:02}.{1:02}.{2:04} - {3:02}:{4:02}:{5:02} h'\
-                  .format(date.day, date.month, date.year,
+                  .format(today.day, today.month, today.year,
                           total_hr, total_min, total_sec))
         plt.pie(u_dur, labels=u_cats, autopct='%1.1f%%', colors = self.get_colors(logfile))
         plt.axis('equal')

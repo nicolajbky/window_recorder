@@ -114,7 +114,8 @@ def is_idle_category(window):
 def save_data(data):
     today = datetime.datetime.now()
     folder = 'data/'
-    filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
+    filename = '{0:d}-{1:02d}-{2:02d}.csv'.format(today.year, today.month, today.day)
+    #filename = str(today.year) + '-' + str(today.month) + '-' + str(today.day) + '.csv'
     path = folder + filename
     if not os.path.isdir(folder):
         os.mkdir(folder)
